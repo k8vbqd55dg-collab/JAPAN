@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>일본어 단어 퀴즈</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- 인트로 화면 (학습 테마, 중앙 정렬) -->
+      <section class="intro" id="intro">
+        <div class="intro-inner">
+          <h1 class="intro-title">일본어 퀴즈</h1>
+          <p class="intro-desc">모드와 문항 수를 선택한 뒤 시작하세요.</p>
+
+          <div class="intro-mode">
+            <span class="intro-mode-label">학습 모드</span>
+            <div class="mode-btns">
+              <label class="mode-option">
+                <input type="radio" name="quizMode" value="ko-ja" checked />
+                <span class="mode-card">
+                  <span class="mode-title">한국어 → 일본어</span>
+                  <span class="mode-desc">한국어 뜻을 보고 일본어 단어 고르기</span>
+                </span>
+              </label>
+              <label class="mode-option">
+                <input type="radio" name="quizMode" value="ja-ko" />
+                <span class="mode-card">
+                  <span class="mode-title">일본어 → 한국어</span>
+                  <span class="mode-desc">일본어 단어를 보고 한국어 뜻 고르기</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="intro-options">
+            <label for="questionCount">문항 수</label>
+            <select id="questionCount">
+              <option value="5">5문항</option>
+              <option value="10" selected>10문항</option>
+              <option value="15">15문항</option>
+              <option value="20">20문항 (전체)</option>
+            </select>
+          </div>
+
+          <button id="startQuizBtn" class="intro-start">시작</button>
+
+          <button type="button" id="contactBtn" class="intro-contact">일본인 친구를 만나고 싶으면 누르세요</button>
+        </div>
+      </section>
+
+      <!-- 퀴즈 화면 -->
+      <div class="quiz-screen" id="quizScreen">
+      <header class="header">
+        <h1>일본어 퀴즈</h1>
+        <p id="quizSubtitle">뜻을 보고 알맞은 일본어 단어를 골라주세요.</p>
+        <button type="button" class="header-contact" id="contactBtnQuiz">일본인 친구를 만나고 싶으면 누르세요</button>
+      </header>
+
+      <section class="status">
+        <div>
+          <span class="label">문항</span>
+          <span id="questionIndex">1</span>
+          <span class="muted">/</span>
+          <span id="questionTotal">0</span>
+        </div>
+        <div>
+          <span class="label">점수</span>
+          <span id="score">0</span>
+        </div>
+      </section>
+
+      <main class="card">
+        <div class="question">
+          <span class="question-label" id="questionLabel">뜻</span>
+          <h2 id="questionText" class="question-text">로딩 중...</h2>
+        </div>
+
+        <div id="choices" class="choices"></div>
+
+        <div class="feedback" id="feedback"></div>
+
+        <div class="actions">
+          <button id="nextBtn" class="primary" disabled>다음 문제</button>
+          <button id="restartBtn" class="ghost">처음부터</button>
+        </div>
+      </main>
+
+      <section class="summary" id="summary">
+        <h3>퀴즈 종료!</h3>
+        <p id="summaryText"></p>
+        <button id="retryBtn" class="primary">다시 하기</button>
+      </section>
+      </div>
+    </div>
+
+    <!-- 연락하기 모달 -->
+    <div class="modal-overlay" id="contactModal" aria-hidden="true">
+      <div class="modal-contact">
+        <button type="button" class="modal-close" id="contactModalClose" aria-label="닫기">&times;</button>
+        <h2 class="modal-title">일본인 친구를 만나고 싶으면 누르세요</h2>
+        <p class="modal-desc">이름, 전화번호, 이메일을 입력한 뒤 제출해 주세요.</p>
+        <form id="contactForm" class="contact-form">
+          <label for="contactName">이름</label>
+          <input type="text" id="contactName" name="name" required placeholder="이름을 입력하세요" />
+          <label for="contactPhone">전화번호</label>
+          <input type="tel" id="contactPhone" name="phone" required placeholder="010-0000-0000" />
+          <label for="contactEmail">이메일</label>
+          <input type="email" id="contactEmail" name="_replyto" required placeholder="example@email.com" />
+          <label for="contactMessage">메시지 (선택)</label>
+          <textarea id="contactMessage" name="message" rows="4" placeholder="문의 내용을 입력하세요"></textarea>
+          <p class="contact-form-status" id="contactFormStatus"></p>
+          <button type="submit" id="contactSubmit" class="contact-submit">제출하기</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
