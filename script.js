@@ -1,5 +1,5 @@
-// 연락하기 폼 제출 시 메일을 받을 Formspree 폼 ID (https://formspree.io 에서 무료 가입 후 폼 생성 → ID 복사)
-const FORMSPREE_FORM_ID = "YOUR_FORM_ID";
+// 연락하기 API URL (Vercel 배포 시 /api/send-email 사용, Resend API 키·수신 이메일은 Vercel 환경 변수에 설정)
+const CONTACT_API_URL = "/api/send-email";
 
 const quizData = [
   { meaning: "물", word: "みず" },
@@ -242,24 +242,25 @@ document.addEventListener("keydown", (e) => {
 
 contactForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  if (!FORMSPREE_FORM_ID || FORMSPREE_FORM_ID === "YOUR_FORM_ID") {
-    contactFormStatus.textContent = "메일 발송을 사용하려면 script.js 상단의 FORMSPREE_FORM_ID를 Formspree 폼 ID로 바꿔 주세요.";
-    contactFormStatus.className = "contact-form-status error";
-    return;
-  }
   contactSubmit.disabled = true;
   contactFormStatus.textContent = "제출 중...";
   contactFormStatus.className = "contact-form-status";
 
-  const formData = new FormData(contactForm);
+  const payload = {
+    name: contactForm.querySelector("[name=name]").value.trim(),
+    phone: contactForm.querySelector("[name=phone]").value.trim(),
+    email: contactForm.querySelector("[name=_replyto]").value.trim(),
+    message: contactForm.querySelector("[name=message]").value.trim()
+  };
+
   try {
-    const res = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
+    const res = await fetch(CONTACT_API_URL, {
       method: "POST",
-      body: formData,
-      headers: { Accept: "application/json" }
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     });
     const data = await res.json().catch(() => ({}));
-    if (res.ok && (data.ok || !data.error)) {
+    if (res.ok && data.ok) {
       contactFormStatus.textContent = "제출되었습니다. 빠른 시일 내에 연락드리겠습니다.";
       contactFormStatus.className = "contact-form-status success";
       contactForm.reset();
@@ -268,7 +269,7 @@ contactForm.addEventListener("submit", async (e) => {
       contactFormStatus.className = "contact-form-status error";
     }
   } catch (err) {
-    contactFormStatus.textContent = "네트워크 오류가 발생했습니다. 나중에 다시 시도해 주세요.";
+    contactFormStatus.textContent = "네트워크 오류가 발생했습니다. Vercel에 배포했는지 확인해 주세요.";
     contactFormStatus.className = "contact-form-status error";
   }
   contactSubmit.disabled = false;
